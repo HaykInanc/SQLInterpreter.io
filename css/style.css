@@ -1,0 +1,44 @@
+*{
+	margin: 0;
+	padding: 0;
+	border: none;
+	outline: none;
+
+}
+body{
+	min-height: 100vh
+}
+.workArea{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+	margin: 0 auto;
+}
+
+.workArea #code{
+	width: 100%;
+	min-height: 200px;
+	overflow : auto;
+	resize : none;
+	color: #15d615;
+	background-color: black;
+	font-weight: 900;
+	padding: 10px;
+	border: none;
+
+}
+
+.workArea .btnContainer{
+	margin: 10px 0;
+	width: 100%;
+}
+
+.workArea button{
+	margin-right: 10px;
+	display: inline-block;
+	padding: 5px;
+	background-color: darkred;
+	color: white;
+}
