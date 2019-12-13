@@ -41,4 +41,49 @@ body{
 	padding: 5px;
 	background-color: darkred;
 	color: white;
+	cursor: pointer;
+}
+
+.result{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.result table{
+	border-spacing: 0;
+	margin-bottom: 10px;
+}
+.result td, .result th{
+	border: 1px solid black;
+	padding: 5px;
+}
+.result th{
+	background-color: black;
+	color: white;
+}
+.result tr:nth-child(2n){
+	background-color: lightgray;
+}
+
+.tableListContainer{
+	width: 90%;
+	margin: 10px auto;
+}
+
+.tableListHeader{
+	font-size: 30px;
+	font-weight: 900;
+}
+
+.tableList{
+	background-color: darkblue;
+	color: white;
+}
+.tableList li{
+	padding: 5px 0;
+	padding-left: 10px;
+}
+.error{
+	color: red;
+	font-weight: 900;
 }

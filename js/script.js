@@ -1,8 +1,20 @@
 let handlers={
 	success: function(tx, result){
+		console.log(result)
+		if (result.rows.length == 0){
+			return
+		}
 		let resultRows = result.rows;
 		let resultElem = document.querySelector('.result');
 		let table = document.createElement('table');
+		table.setAttribute('border', '1');
+		let thRowElem = document.createElement('tr');
+		for (elem in resultRows[0]){
+			let columnElem = document.createElement('th');
+			columnElem.innerText = elem;
+			thRowElem.appendChild(columnElem);
+		}
+		table.appendChild(thRowElem);
 		for (let i=0; i<resultRows.length; i++){
 			let rowElem = document.createElement('tr');
 			table.appendChild(rowElem);
@@ -20,6 +32,40 @@ let handlers={
 		errorElem.innerText = error.message;
 		errorElem.classList.add('error');
 		resultElem.appendChild(errorElem);
+	},
+	showTables: function(tx, result){
+		let rows = result.rows;
+		let tableListElem = document.querySelector('.tableList');
+		tableListElem.innerText = '';
+		let ulElem = document.createElement('ul');
+		ulElem.classList.add('tableList');
+		for (elem in rows){
+			let liElem = document.createElement('li');
+			ulElem.appendChild(liElem);
+			liElem.innerText = rows[elem].name;
+		}
+		tableListElem.appendChild(ulElem);
+	},
+	csvParse: function(tx, result){
+		let dataArr = [...result.rows]
+		let returnStr = '';
+		let firstItter = true;
+		for (row of dataArr){
+			if (firstItter){
+				for (elem in row){
+					returnStr+=elem+',';
+				}
+				returnStr=returnStr.slice(0,-1);
+				returnStr+='\n';
+			}
+			for (elem in row){
+				returnStr+=row[elem]+',';
+			}
+			returnStr=returnStr.slice(0,-1);
+			returnStr+='\n';
+			firstItter = false;
+		}
+		loadData(returnStr)
 	}
 }
 
@@ -49,7 +95,45 @@ function run(){
 	    	tx.executeSql(codeArr[i], [], handlers.success, handlers.error);
 	    }
 	}); 
+	getTablesList();
+}
+
+function loadData(text, name='file.csv'){
+	let type = 'data:application/octet-stream;base64, ';
+	let base = window.btoa(unescape(encodeURIComponent(text)));
+	let hrefStr = type + base;
+
+	let elem = document.createElement('a');
+	elem.setAttribute('download', name);
+	elem.setAttribute('href', hrefStr);
+	elem.click();
+}
+
+function getTablesList(){
+
+	let code = `SELECT 
+    	name
+	FROM 
+	    sqlite_master 
+	WHERE 
+	    type ='table' 
+	    AND name NOT LIKE 'sqlite_%'
+	    and name <> "__WebKitDatabaseInfoTable__"
+	`;
+	db.transaction(function (tx) { 
+		tx.executeSql(code, [], handlers.showTables);
+	});
+}
+
+
+
+function loadDataHandler(table='table5'){
+	db.transaction(function (tx) { 
+	    tx.executeSql(`select * from ${table};`, [], handlers.csvParse);
+	}); 
 }
 
 let runBtn = document.getElementById('run');
 runBtn.addEventListener('click', ()=>run());
+
+getTablesList();
