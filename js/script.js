@@ -1,6 +1,5 @@
 let handlers={
 	success: function(tx, result){
-		console.log(result)
 		if (result.rows.length == 0){
 			return
 		}
@@ -34,7 +33,7 @@ let handlers={
 		resultElem.appendChild(errorElem);
 	},
 	showTables: function(tx, result){
-		let rows = result.rows;
+		let rows = [...result.rows];
 		let tableListElem = document.querySelector('.tableList');
 		tableListElem.innerText = '';
 		let ulElem = document.createElement('ul');
@@ -46,7 +45,18 @@ let handlers={
 		}
 		tableListElem.appendChild(ulElem);
 	},
-	csvParse: function(tx, result){
+	loadTables: function (tx, result){
+		let rows = [...result.rows];
+		for (row in rows){
+			let table = rows[row].name
+			db.transaction(function (tx) { 
+			    tx.executeSql(`select * from ${table};`, [], (tx, result)=>handlers.csvParse(tx, result, table+'_table.csv'));
+			}); 
+
+		}
+
+	},
+	csvParse: function(tx, result, fileName){
 		let dataArr = [...result.rows]
 		let returnStr = '';
 		let firstItter = true;
@@ -59,13 +69,16 @@ let handlers={
 				returnStr+='\n';
 			}
 			for (elem in row){
-				returnStr+=row[elem]+',';
+				if (String(row[elem]).toLowerCase() !== 'null') {
+					returnStr+=row[elem]
+				}
+				returnStr += ',';
 			}
 			returnStr=returnStr.slice(0,-1);
 			returnStr+='\n';
 			firstItter = false;
 		}
-		loadData(returnStr)
+		loadData(returnStr, fileName)
 	}
 }
 
@@ -98,18 +111,18 @@ function run(){
 	getTablesList();
 }
 
-function loadData(text, name='file.csv'){
+function loadData(text, fileName){
 	let type = 'data:application/octet-stream;base64, ';
 	let base = window.btoa(unescape(encodeURIComponent(text)));
 	let hrefStr = type + base;
 
 	let elem = document.createElement('a');
-	elem.setAttribute('download', name);
+	elem.setAttribute('download', fileName);
 	elem.setAttribute('href', hrefStr);
 	elem.click();
 }
 
-function getTablesList(){
+function getTablesList(download = false){
 
 	let code = `SELECT 
     	name
@@ -120,20 +133,27 @@ function getTablesList(){
 	    AND name NOT LIKE 'sqlite_%'
 	    and name <> "__WebKitDatabaseInfoTable__"
 	`;
+
 	db.transaction(function (tx) { 
-		tx.executeSql(code, [], handlers.showTables);
+		tx.executeSql(code, [], download? handlers.loadTables:handlers.showTables);
 	});
 }
 
+function saveQuery(){
+	localStorage.setItem('query', codeElem.value);
+}
 
-
-function loadDataHandler(table='table5'){
-	db.transaction(function (tx) { 
-	    tx.executeSql(`select * from ${table};`, [], handlers.csvParse);
-	}); 
+function setQuery(){
+	codeElem.value = localStorage.getItem('query');
 }
 
 let runBtn = document.getElementById('run');
+let codeElem = document.getElementById('code');
 runBtn.addEventListener('click', ()=>run());
+codeElem.addEventListener('input', ()=>saveQuery());
+
+let loadBtn = document.getElementById('load');
+loadBtn.addEventListener('click', ()=>getTablesList(true));
 
 getTablesList();
+setQuery()
