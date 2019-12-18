@@ -1,3 +1,153 @@
+let startDate = [
+	`drop table if exists Users;`,
+
+	`create table Users(
+		userID integer primary key autoincrement,
+		name varchar(128),
+		lastName varchar(128),
+		born datetime,
+		activeFlg bit default 1
+	);`,
+
+
+
+	`insert into Users (name, lastName, born) values ('Аверкий', 'Филиппов', '1990-00-20'),
+	('Элеонора', 'Гаврилова', '1978-00-10'),
+	('Вадим', 'Комаров', '1981-08-28'),
+	('Аграфена', 'Полякова', '1992-00-10'),
+	('Тамара', 'Вихирева', '1981-02-2'),
+	('Фома', 'Соловьёв', '1985-06-16'),
+	('Кондратий', 'Арсеньев', '1976-05-25'),
+	('Руслан', 'Ерофеев', '1973-00-10'),
+	('Тит', 'Шашков', '1984-03-13'),
+	('Анжела', 'Русина', '1966-05-25'),
+	('Марианна', 'Лапина', '1965-03-3'),
+	(NULL, 'Осипова', '1972-01-21'),
+	('Авксентий', 'Карпов', '1981-07-27'),
+	('Инга', 'Чистякова', '1988-05-15'),
+	('Флора', 'Фёдорова', '1980-06-16'),
+	('Любовь', 'Петрова', '1986-03-13'),
+	('Николай', NULL, '1976-06-16'),
+	('Прасковья', 'Новикова', '1968-04-24'),
+	('Мокей', 'Вирский', '1984-09-19'),
+	('Владилена', 'Григорьева', '1986-04-24'),
+	('Владлена', 'Гулевич', '1969-04-24'),
+	('Мальвина', 'Демьянченко', '1964-01-11'),
+	(NULL, 'Макаров', '1994-05-25'),
+	('Фаина', 'Новикова', '1987-04-14'),
+	('Всеслава', 'Изофатова', '1966-01-11'),
+	('Инесса', 'Крылова', '1983-09-9'),
+	('Алёна', '', '1972-08-8'),
+	('Клементина', 'Демьянченко', '1990-07-7'),
+	('Капитолина', 'Матвеева', '1990-07-27');`,
+
+
+	`drop table if exists Orders;`,
+
+	`create table Orders(
+		orderID integer primary key autoincrement,
+		userID integer,
+		productID integer,
+		quantity integer
+	);`,
+
+
+	`insert into Orders (userID, productID, quantity) values (17, 14, 2),
+	(9, 11, 1),
+	(12, 4, 5),
+	(7, 1, 2),
+	(27, 4, 4),
+	(5, 5, 3),
+	(20, 16, 4),
+	(27, 2, 6),
+	(1, 17, 4),
+	(8, 16, 2),
+	(25, 12, 5),
+	(28, 6, 1),
+	(11, 5, 2),
+	(8, 17, 6),
+	(23, 8, 1),
+	(11, 10, 1),
+	(12, 15, 2),
+	(15, 6, 1),
+	(2, 16, 4),
+	(3, 13, 2),
+	(6, 14, 3),
+	(13, 5, 5),
+	(11, 3, 1),
+	(12, 7, 5),
+	(12, 16, 3),
+	(16, 12, 1),
+	(2, 4, 6),
+	(16, 2, 6),
+	(15, 13, 5),
+	(29, 7, 4),
+	(8, 7, 4),
+	(8, 15, 5),
+	(18, 12, 2),
+	(1, 1, 6),
+	(5, 16, 6),
+	(12, 6, 2),
+	(1, 3, 3),
+	(29, 1, 5),
+	(28, 14, 1),
+	(19, 15, 6),
+	(15, 11, 5),
+	(20, 13, 2),
+	(12, 7, 4);`,
+
+
+	`drop table if exists Product;`,
+
+	`create table Product(
+		productID integer primary key autoincrement,
+		title varchar(128),
+		price integer
+	);`,
+
+
+	`insert into Product (title, price) values ('Обод', 3000),
+	('Педаль', 500),
+	('Переключатель скоростей', 1000),
+	('Подножка', 300),
+	('Подшипник', 20),
+	('Покрышка', 1500),
+	('Рама', 6000),
+	('Руль', 800),
+	('Спица', 10),
+	('Тормоз', 500),
+	('Трещотка', 700),
+	('Трос', 100),
+	('Фляга', 500),
+	('Цепь', 1000),
+	('Шатун', 700),
+	('Шлем', 1500),
+	('Якорь', 300);`,
+	`drop table if exists Reserves;`,
+
+	`create table Reserves(
+		orderID integer primary key autoincrement,
+		userID integer,
+		productID integer,
+		quantity integer
+	);`,
+
+	`insert into Reserves (userID, productID, quantity) values 
+	(20, 2, 1),
+	(6, 13, 6),
+	(5, 4, 5),
+	(12, 7, 1),
+	(2, 13, 5),
+	(23, 5, 2),
+	(19, 14, 1),
+	(5, 15, 4),
+	(6, 16, 6),
+	(28, 14, 1),
+	(12, 12, 5),
+	(30, 13, 3),
+	(7, 17, 4);`
+]
+
 let handlers={
 	success: function(tx, result){
 		if (result.rows.length == 0){
@@ -19,7 +169,7 @@ let handlers={
 			table.appendChild(rowElem);
 			for (elem in resultRows[i]){
 				let columnElem = document.createElement('td');
-				columnElem.innerText = resultRows[i][elem];
+				columnElem.innerText = resultRows[i][elem]||'NULL';
 				rowElem.appendChild(columnElem);
 			}
 		}
@@ -85,7 +235,13 @@ function replaceAll(string, search, substr=' '){
 	return string.split(search).join(substr)
 }
 
-var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+
+try{
+	var db = openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
+}
+catch (e){
+	alert('Упс... Ваш браузер не поддерживает webSQL. Попробуйте воспользоваться другим \n (Chrome должен помочь)')
+}
 
 function getCode(){
 	let elem = document.getElementById('code');
@@ -96,6 +252,14 @@ function getCode(){
 	return codeArr
 }
 
+function loadStartDate(){
+	db.transaction(function (tx) { 
+		for (let i=0; i< startDate.length; i++){
+	    	tx.executeSql(startDate[i], []);
+	    }
+	});
+	getTablesList();
+}
 
 
 function run(){
@@ -109,6 +273,7 @@ function run(){
 	}); 
 	getTablesList();
 }
+
 
 function loadData(text, fileName){
 	let type = 'data:application/csv;charset=utf-8,';
@@ -152,6 +317,10 @@ codeElem.addEventListener('input', ()=>saveQuery());
 
 let loadBtn = document.getElementById('load');
 loadBtn.addEventListener('click', ()=>getTablesList(true));
+
+
+let loadStartDataElem = document.getElementById('loadData');
+loadStartDataElem.addEventListener('click', ()=>loadStartDate());
 
 getTablesList();
 setQuery()

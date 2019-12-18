@@ -62,13 +62,13 @@ h1{
 
 }
 
-.workArea .btnContainer{
+.btnContainer{
 	text-align: right;
 	margin: 10px 0;
 	width: 100%;
 }
 
-.workArea button{
+.btnContainer button{
 	margin-left: 10px;
 	display: inline-block;
 	padding: 12px 26px;
