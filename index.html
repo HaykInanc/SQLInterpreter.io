@@ -4,22 +4,24 @@
 	<meta charset="UTF-8">
 	<title>sqlProj</title>
 	<link rel="stylesheet" href="css/style.css">
+	<link href="favicon.ico" rel="shortcut icon" type="image/x-icon">
 </head>
 <body>
-	<div class="tableListContainer">
-		<p class="tableListHeader">Список таблиц</p>
-		<div class="tableList">
+	<h1 class="underline">SQL интерпретатор</h1>
+	<div class="mainContainer">
+		<div class="workArea">
+			<textarea spellcheck="false" id="code"></textarea>
+			<div class="btnContainer">
+					<button id="run">Запустить</button>
+					<button id="load">Выгрузить</button>
+			</div>
+			<div class="result"></div>
 		</div>
-	</div>
-	<div class="workArea">
-		<textarea spellcheck="false" id="code"></textarea>
-	<div class="btnContainer">
-				<button id="run">Запустить</button>
-			<button id="load">Выгрузить</button>
-	</div>
-	</div>
-	<div class="result">
-		
+		<div class="tableListContainer">
+			<p class="tableListHeader underline">Список таблиц</p>
+			<div class="tableList">
+			</div>
+		</div>
 	</div>
 	<script src="js/script.js"></script>
 </body>

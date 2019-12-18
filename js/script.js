@@ -37,7 +37,6 @@ let handlers={
 		let tableListElem = document.querySelector('.tableList');
 		tableListElem.innerText = '';
 		let ulElem = document.createElement('ul');
-		ulElem.classList.add('tableList');
 		for (elem in rows){
 			let liElem = document.createElement('li');
 			ulElem.appendChild(liElem);
