@@ -111,9 +111,8 @@ function run(){
 }
 
 function loadData(text, fileName){
-	let type = 'data:application/octet-stream;base64, ';
-	let base = window.btoa(unescape(encodeURIComponent(text)));
-	let hrefStr = type + base;
+	let type = 'data:application/csv;charset=utf-8,';
+	let hrefStr = type + text;
 
 	let elem = document.createElement('a');
 	elem.setAttribute('download', fileName);
