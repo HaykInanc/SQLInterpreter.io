@@ -176,7 +176,8 @@ let handlers={
 			table.appendChild(rowElem);
 			for (elem in resultRows[i]){
 				let columnElem = document.createElement('td');
-				columnElem.innerText = resultRows[i][elem]||'NULL';
+				columnElem.innerText =  (resultRows[i][elem] === null)? 'NULL' : resultRows[i][elem];
+				console.log(resultRows[i][elem])
 				rowElem.appendChild(columnElem);
 			}
 		}
